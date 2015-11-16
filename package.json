@@ -1,5 +1,5 @@
 {
-  "name": "node-red-node-i2c",
+  "name": "node-red-contrib-i2c",
   "version": "0.0.1",
   "description": "A Node-RED node to talk to an IRC server",
   "dependencies": {
@@ -18,7 +18,7 @@
   "author": {
     "name": "Niels v.d. Spek",
     "email": "nielsnl68@gmail.com",
-    "url": "https://github.com/nielsnl68/node-contribute-i2c"
+    "url": "https://github.com/nielsnl68/node-contrib-i2c"
   },
   "_id": "node-red-node-i2c@0.0.1",
   "scripts": {},
