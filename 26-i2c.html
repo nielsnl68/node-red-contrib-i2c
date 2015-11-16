@@ -1,0 +1,223 @@
+<!--
+  Copyright 2015, Niels v/d Spek.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="i2c scan">
+    <div class="form-row">
+        <label for="node-input-i2cdevice"><i class="fa fa-globe"></i> I2C device</label>
+        <input type="text" id="node-input-i2cdevice">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+	<div class="form-tips">Scan for connected devices on I2C.</div>
+</script>
+
+<script type="text/x-red" data-help-name="i2c scan">
+    <p>Reads data from a local I2C port.</p>
+    <p>Shows a list of connected I2C devices.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('i2c scan',{
+        category: 'input',
+        defaults: {
+		    i2cdevice: {type:"i2c-device", required:true},
+            name: {name:""}
+        },
+        color:"red",
+        inputs:1,
+        outputs:2,
+        icon: "serial.png",
+        label: function() {
+            var I2CNode = RED.nodes.node(this.i2cdevice);
+            return this.name||(I2CNode?I2CNode.label().split("/")[2]:"I2C scan");
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="i2c in">
+    <div class="form-row">
+        <label for="node-input-i2cdevice"><i class="fa fa-globe"></i> I2C device</label>
+        <input type="text" id="node-input-i2cdevice">
+    </div>
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-random"></i> address</label>
+        <input type="number" id="node-input-address" class="I2C-in-address" placeholder="[msg.address]">
+    </div>
+   <div class="form-row">
+        <label for="node-input-command"><i class="fa fa-random"></i> Command</label>
+        <input type="number" id="node-input-command" class="I2C-in-command" placeholder="[msg.command]">
+    </div>
+   <div class="form-row">
+        <label for="node-input-count"><i class="fa fa-random"></i> Returning Length</label>
+        <input type="number" id="node-input-count" class="I2C-in-count"  placeholder="1">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-tips">The address to join must start with a # (as per normal i2c rules...)<br/>
+    You may join multiple addresss by comma separating a list - #chan1,#chan2,etc.</div>
+</script>
+
+<script type="text/x-red" data-help-name="i2c in">
+    <p>Reads data from a local I2C port.</p>
+    <p>It will put a byte array into the msg.payload.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('i2c in',{
+        category: 'input',
+        defaults: {
+            name: {value:""},
+            i2cdevice: {type:"i2c-device", required:true},
+            address: {value:"",required:false},
+            command: {value:"",required:false},
+            count: {value:"1",required:true}
+        },
+        color:"red",
+        inputs:1,
+        outputs:1,
+        icon: "serial.png",
+        label: function() {
+            var i2cNode = RED.nodes.node(this.i2cdevice);
+            return this.name || (i2cNode ? i2cNode.label() : "i2c");
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+        $(".I2C-in-address").spinner({
+            //max:60,
+            min:1,
+			max:127
+        });
+        $(".I2C-in-command").spinner({
+            //max:60,
+            min:0,
+			max:255
+        });
+        $(".I2C-in-count").spinner({
+            //max:60,
+            min:0,
+			max:31
+        });
+</script>
+
+
+<script type="text/x-red" data-template-name="i2c out">
+    <div class="form-row">
+        <label for="node-input-i2cdevice"><i class="fa fa-globe"></i> I2C device</label>
+        <input type="text" id="node-input-i2cdevice">
+    </div>
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-random"></i> Address</label>
+        <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" min=0 max=127>
+    </div>
+    <div class="form-row">
+        <label for="node-input-command"><i class="fa fa-random"></i> Command</label>
+        <input type="number" id="node-input-command" class="I2C-out-command" placeholder="[msg.command]" min=0 max=255>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-payload"><i class="fa fa-random"></i> Payload</label>
+        <input type="sring" id="node-input-payload" class="I2C-out-command" placeholder="[msg.payload]">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-tips">The address to join must start with a # (as per normal i2c rules...)<br/>
+    Sending the complete object will stringify the whole msg object before sending.</div>
+</script>
+
+<script type="text/x-red" data-help-name="i2c out">
+   <p>Provides a connection to an outbound I2C address.</p>
+    <p>Only the <b>msg.payload</b> is sent.</p>
+	<p>address <b>0</b> means that you will broadcast to all I2C-units on the I2C bus.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('i2c out',{
+        category: 'output',
+        defaults: {
+            name: {value:""},
+            i2cdevice: {type:"i2c-device", required:true},
+            address: {value:"",required:false},
+            command: {value:"", required:false},
+            payload: {value:"", required:false}
+        },
+        color:"red",
+        inputs:1,
+        outputs:0,
+        icon: "serial.png",
+        align: "right",
+        label: function() {
+            return this.name || (this.i2cdevice ? RED.nodes.node(this.i2cdevice).label() : "i2c");
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+	        $(".I2C-out-address").spinner({
+            //max:60,
+            min:0,
+			max:255
+        });
+       $(".I2C-out-command").spinner({
+            //max:60,
+            min:0,
+			max:255
+        });
+</script>
+
+
+<script type="text/x-red" data-template-name="i2c-device">
+    <div class="form-row">
+        <label for="node-config-input-device"><i class="fa fa-globe"></i> I2C Device</label>
+        <input type="text" id="node-config-input-device" placeholder="/dev/I2C-1" style="width: 45%;" >
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-address"><i class="fa fa-user"></i> Default Address</label>
+        <input type="text" id="node-config-input-address" placeholder="24">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('i2c-device',{
+        category: 'config',
+        defaults: {
+            device: {value:"",required:true},
+            address: {value:"24",required:true}
+        },
+        label: function() {
+            return this.device;
+        }
+    });
+    $("#node-config-input-address").spinner({
+            //max:60,
+            min:0,
+			max:255
+        });
+
+</script>
