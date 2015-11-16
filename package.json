@@ -12,7 +12,7 @@
   ],
   "node-red": {
     "nodes": {
-      "i2c": "26-i2c.js"
+      "i2c": "i2c/26-i2c.js"
     }
   },
   "author": {
