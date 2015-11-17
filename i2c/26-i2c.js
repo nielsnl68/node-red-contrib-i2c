@@ -89,7 +89,7 @@ module.exports = function(RED) {
 			var payload = node.payload || msg.payload;
             
 			if (!isNaN(payload) ) {
-				node.port.writeByte(parseInt(msg.command), parseint(payload),
+				node.port.writeByte(parseInt(msg.command), parseInt(payload),
 						function(err) {
 							if (err) node.error(err);
 						});
