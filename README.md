@@ -1,9 +1,9 @@
-# node-contribute-i2c
+# node-red-contrib-i2c
 This set of node-red nodes communicate with the Raspberry Pi I2C driver and uses the node-I2C package.
 Run the following command in the root directory of your Node-RED install, usually
 this is ~/.node-red .
 
-    npm install node-red-contribute-i2c
+    npm install node-red-contrib-i2c
 
 Usage
 -----
