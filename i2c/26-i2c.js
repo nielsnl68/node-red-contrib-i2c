@@ -26,30 +26,32 @@ module.exports = function(RED) {
         this.command =  n.command;
         this.count   =  n.count;
         var node = this;
+        node.status({text:""});
         if (node.serverConfig.port === null) {
             node.log("CONNECT: "+node.serverConfig.device);
-  //          node.status({fill:"grey",shape:"dot",text:"connecting"});
-			node.serverConfig.port = new node.I2C(this.address, {
-				device : node.serverConfig.device
-			});
+			      node.serverConfig.port = new node.I2C(parseInt(this.address), {	device : node.serverConfig.device	});
         }
         else { node.status({text:""}); }
         node.port = node.serverConfig.port;
-		node.on("input", function(msg) {
-		    var address =  node.address || msg.address || this.serverConfig.address;
-		    var command =  node.command || msg.command ;
-			node.port.setAddress(parseInt(address));
-			node.port.readBytes(parseInt(command), parseInt(node.count), function(	err, res) {
-			if (err) {
-					node.error(err);
-				} else {
-					var payload;
-					if (node.count == 1) {
-						payload = res[0];
-					} else {
-						payload = res;
-					}
-					node.send({address : address, command: command, payload : payload});
+		    node.on("input", function(msg) {
+		      var address =  node.address || msg.address || this.serverConfig.address;
+		      var command =  node.command || msg.command ;
+			    node.port.setAddress(parseInt(address));
+			    node.port.readBytes(parseInt(command), node.count, function(	err, res) {
+			    if (err) {
+					  node.error(err);
+				  } else {
+					  var payload;
+					  if (Array.isArray(msg) && node.count == 1) {
+						  payload = res[0];
+					  } else {
+						  payload = res;
+					  }
+           // msg.address = address;
+           // msg.command = command;
+           // msg.payload = payload;
+            
+					  node.send({address : address, command: command, payload : payload});
 				}
 			});
 		});
@@ -66,16 +68,14 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
         this.i2cdevice = n.i2cdevice;
         this.serverConfig = RED.nodes.getNode(this.i2cdevice);
-        this.address = n.address;
-        this.command = n.command;
+        this.address = parseInt(n.address);
+        this.command = parseInt(n.command);
 		this.payload = n.payload;
         var node = this;
+        node.status({text:""});
         if (node.serverConfig.port === null) {
             node.log("CONNECT: "+node.serverConfig.device);
- //           node.status({fill:"grey",shape:"dot",text:"connecting"});
-			node.serverConfig.port = new node.I2C(this.address, {
-				device : node.serverConfig.device
-			});
+ 			      node.serverConfig.port = new node.I2C(this.address, {	device : node.serverConfig.device	});
         }
         else { node.status({text:""}); }
         
@@ -89,7 +89,7 @@ module.exports = function(RED) {
 			var payload = node.payload || msg.payload;
             
 			if (!isNaN(payload) ) {
-				node.port.writeByte(parseInt(msg.command), parseInt(payload),
+				node.port.writeByte(parseInt(msg.command), parseint(payload),
 						function(err) {
 							if (err) node.error(err);
 						});
@@ -111,7 +111,7 @@ module.exports = function(RED) {
 			if (payload.count > 32) {
 				node.error("To many elements in array to write to I2C");
 			} else {
-				node.port.writeBytes(node.command, payload, function(err) {
+				node.port.writeBytes(parseInt(node.command), payload, function(err) {
 					if (err) node.error(err);
 				});
 			}
@@ -133,33 +133,29 @@ module.exports = function(RED) {
             node.log("CONNECT: "+node.serverConfig.device);
 //            node.status({fill:"grey",shape:"dot",text:"connecting"});
             //console.log(node);
-			node.serverConfig.port = new I2C(this.serverConfig.address, {
-				device : node.serverConfig.device
-			});
-		//	console.log(node.serverConfig.port);
+			      node.serverConfig.port = new I2C(parseInt(this.serverConfig.address), {device : node.serverConfig.device});
+		    //	console.log(node.serverConfig.port);
         }
         else { node.status({text:""}); }
         node.port = node.serverConfig.port;
         node.on("input", function(msg) {
-			node.port.scan(function(err, res) {
-				// result contains a buffer of bytes
-				if (err) {
-					node.error(errI);
-				} else {
-					node.send([{payload: res}, null]);
-                    res.forEach(function(entry) {  
-						node.send([null, {payload: entry, address: entry}]);
-					});
-					
-				}
-			});
-		});
+			    node.port.scan(function(err, res) {
+				    // result contains a buffer of bytes
+				    if (err) {
+					    node.error(errI);
+				    } else {
+					    node.send([{payload: res}, null]);
+              res.forEach(function(entry) {  
+						    node.send([null, {payload: entry, address: entry}]);
+					    });
+    					
+    				}
+    			});
+    		});
 
         node.on("close", function() {
          //   node.port.free();
         });
     }
     RED.nodes.registerType("i2c scan",I2CScanNode);
-
-	
 	}
