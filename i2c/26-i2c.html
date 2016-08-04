@@ -45,7 +45,7 @@
         icon: "serial.png",
         label: function() {
             var I2CNode = RED.nodes.node(this.i2cdevice);
-            return this.name||(I2CNode?I2CNode.label().split("/")[2]:"I2C scan");
+            return this.name||'Scan '+(I2CNode?I2CNode.label().split("/")[2]:"I2C-?");
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
@@ -94,13 +94,13 @@
             command: {value:"",required:false},
             count: {value:"1",required:true}
         },
-        color:"red",
+        color:"red",  
         inputs:1,
         outputs:1,
         icon: "serial.png",
         label: function() {
-            var i2cNode = RED.nodes.node(this.i2cdevice);
-            return this.name || (i2cNode ? i2cNode.label() : "i2c");
+            var I2CNode = RED.nodes.node(this.i2cdevice);
+            return this.name||("Read from "+(I2CNode?I2CNode.label().split("/")[2]:"I2C-?");
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
@@ -173,7 +173,8 @@
         icon: "serial.png",
         align: "right",
         label: function() {
-            return this.name || (this.i2cdevice ? RED.nodes.node(this.i2cdevice).label() : "i2c");
+            var I2CNode = RED.nodes.node(this.i2cdevice);
+            return this.name||'Send to '+(I2CNode?I2CNode.label().split("/")[2]:"I2C-?");
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
