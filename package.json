@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-i2c",
-  "version": "0.0.2",
-  "description": "A Node-RED node to talk to an I2C port",
+  "version": "0.0.3",
+  "description": "A Node-RED node to talk to the Raspiberry PI's I2C port",
   "dependencies": {
     "i2c": "0.2.x"
   },
@@ -10,6 +10,10 @@
     "node-red",
     "i2c"
   ],
+    "repository": {
+    "type": "git",
+    "url": "https://github.com/github.com/nielsnl68/node-contrib-i2c"
+  },
   "node-red": {
     "nodes": {
       "i2c": "26-i2c.js"
@@ -20,19 +24,8 @@
     "email": "nielsnl68@gmail.com",
     "url": "https://github.com/nielsnl68/node-contrib-i2c"
   },
-  "_id": "node-red-contrib-i2c@0.0.1",
-  "scripts": {},
-  "_npmVersion": "1.4.28",
-  "_npmUser": {
-    "name": "nielsnl",
-    "email": "nielsnl68@gmail.com"
-  },
-  "maintainers": [
-    {
-      "name": "nielsnl",
-      "email": "nielsnl68@gmail.com"
-    }
-  ],
-  "directories": {},
-  "_resolved": ""
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": ""
+  }
 }
