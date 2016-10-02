@@ -3,11 +3,16 @@
   "version": "0.0.3",
   "description": "A Node-RED node to talk to the Raspiberry PI's I2C port",
   "dependencies": {
-    "i2c": "0.2.x"
+    "i2c": "^0.2.3"
+  },
+  "main": "26-i2c.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "Apache-2.0",
   "keywords": [
     "node-red",
+    "node-red-contrib",
     "i2c"
   ],
     "repository": {
