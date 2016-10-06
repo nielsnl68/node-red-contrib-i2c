@@ -17,7 +17,7 @@
   ],
     "repository": {
     "type": "git",
-    "url": "https://github.com/github.com/nielsnl68/node-contrib-i2c"
+    "url": "https://github.com/nielsnl68/node-contrib-i2c"
   },
   "node-red": {
     "nodes": {
