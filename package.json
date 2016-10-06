@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-i2c",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A Node-RED node to talk to the Raspiberry PI's I2C port",
   "dependencies": {
     "i2c": "^0.2.3"
@@ -21,7 +21,7 @@
   },
   "node-red": {
     "nodes": {
-      "i2c": "26-i2c.js"
+      "i2c": "i2c/26-i2c.js"
     }
   },
   "author": {
