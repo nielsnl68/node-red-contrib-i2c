@@ -23,5 +23,10 @@ This will scan the I2C bus for connected devices and has one in point to trigger
 This node will request data from a given device. The address and command can both be set in the dialog screen or dynamicly with <b>msg.address</b> and <b>msg.command</b>. This node outputs the result as a buffer in <b>msg.payload</b> and places the address in <b>msg.address</b> and command in <b>msg.command</b>.
 
 ### Output I2C
-This node will send a given String/array/buffer to a given device. The address and command can both be set in the dialog screen or dynamicly with <b>msg.address</b> and <b>msg.command</b>. The payload can be dynamicly or staticly set. 
+This node will send a given String/array/buffer to a given device. The address and command can both be set in the dialog screen or dynamicly with <b>msg.address</b> and <b>msg.command</b>. 
+The payload can be staticly or dynamicly (using msg.payload) set. This payload can be a Buffer, Array, String or Integer. When you use integers then the number of bytes to send is importend and can be set between 0 and 6 bytes. 
 
+
+#### Inportend Note
+This set of nodes is using the work of kelly's I2C package to work. And i like to thank hem for the work he did on that package. 
+For more info check out his github account at: https://github.com/kelly/node-i2c
