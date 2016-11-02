@@ -41,16 +41,7 @@ module.exports = function(RED) {
                 if (err) {
                     node.error(err);
                 } else {
-                    var payload;
-                    if (Buffer.isBuffer(res) && node.count == 1) {
-                        payload = res[0];
-                    } else {
-                        payload = res;
-                    }
-                    // msg.address = address;
-                    // msg.command = command;
-                    // msg.payload = payload;
-
+                    var payload=res.toJSON();
                     node.send({
                         address: address,
                         command: command,
@@ -77,10 +68,10 @@ module.exports = function(RED) {
         this.count = parseInt(n.count);
         this.payload = n.payload;
         var node = this;
- 
+
         if (node.serverConfig.port === null) {
             node.log("CONNECT: " + node.serverConfig.device);
-   
+
             node.serverConfig.port = new I2C(parseInt(this.serverConfig.address), {
                 device: node.serverConfig.device
             });
@@ -95,7 +86,7 @@ module.exports = function(RED) {
             node.port.setAddress(msg.address);
             var payload = node.payload || msg.payload;
             if (payload == null || node.count == 0) {
-				node.port.writeByte(parseInt(node.command),  function(err) {
+				node.port.writeByte(parseInt(msg.command),  function(err) {
                     if (err) node.error(err);
                 });
 			} else if (!isNaN(payload)) {
@@ -103,14 +94,14 @@ module.exports = function(RED) {
 
 				payload = Buffer.allocUnsafe(node.count);
 				payload.writeIntLE(data, 0, node.count, true);
-				
+
 			} else if (String.isString(payload) || Array.isArray(payload)) {
 				payload = Buffer.from(payload);
 			}
             if (payload.count > 32) {
-                node.error("To many elements in array to write to I2C");
+                node.error("Too many elements in array to write to I2C");
             } else {
-                node.port.writeBytes(parseInt(node.command), payload, function(err) {
+                node.port.writeBytes(parseInt(msg.command), payload, function(err) {
                     if (err) node.error(err);
                 });
             }
