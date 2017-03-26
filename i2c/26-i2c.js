@@ -89,28 +89,28 @@ module.exports = function(RED) {
         node.port = node.serverConfig.port;
 
         node.on("input", function(msg) {
-            msg.address = node.address || msg.address || this.serverConfig.address;
-            msg.command = node.command || msg.command;
+            var i2caddress = node.address || msg.address || this.serverConfig.address;
+            var i2ccommand = node.command || msg.command;
 
-            node.port.setAddress(msg.address);
+            node.port.setAddress(i2caddress);
             var payload = node.payload || msg.payload;
             if (payload == null || node.count == 0) {
-				node.port.writeByte(parseInt(node.command),  function(err) {
+		node.port.writeByte(parseInt(i2ccommand),  function(err) {
                     if (err) node.error(err);
                 });
-			} else if (!isNaN(payload)) {
-				var data = payload;
+	    } else if (!isNaN(payload)) {
+		var data = payload;
 
-				payload = Buffer.allocUnsafe(node.count);
-				payload.writeIntLE(data, 0, node.count, true);
-				
-			} else if (String.isString(payload) || Array.isArray(payload)) {
-				payload = Buffer.from(payload);
-			}
+		payload = Buffer.allocUnsafe(node.count);
+		payload.writeIntLE(data, 0, node.count, true);
+
+	    } else if (String.isString(payload) || Array.isArray(payload)) {
+		payload = Buffer.from(payload);
+	    }
             if (payload.count > 32) {
-                node.error("To many elements in array to write to I2C");
+                node.error("Too many elements in array to write to I2C");
             } else {
-                node.port.writeBytes(parseInt(node.command), payload, function(err) {
+                node.port.writeBytes(parseInt(i2ccommand), payload, function(err) {
                     if (err) node.error(err);
                 });
             }
