@@ -104,7 +104,7 @@ module.exports = function(RED) {
 		payload = Buffer.allocUnsafe(node.count);
 		payload.writeIntLE(data, 0, node.count, true);
 
-	    } else if (String.isString(payload) || Array.isArray(payload)) {
+	    } else if ((typeof payload === "string") || Array.isArray(payload)) {
 		payload = Buffer.from(payload);
 	    }
             if (payload.count > 32) {
