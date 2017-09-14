@@ -24,9 +24,13 @@ This node will request data from a given device. The address and command can bot
 
 ### Output I2C
 This node will send a given String/array/buffer to a given device. The address and command can both be set in the dialog screen or dynamicly with <b>msg.address</b> and <b>msg.command</b>. 
-The payload can be staticly or dynamicly (using msg.payload) set. This payload can be a Buffer, Array, String or Integer. When you use integers then the number of bytes to send is importend and can be set between 0 and 6 bytes. 
+The payload can be staticly or dynamicly (using msg.payload) set. This payload can be a Buffer, Array, String or Integer. When you use integers then the number of bytes to send is importend and can be set between 0 and 31 bytes. 
+
+NEW(0.5.0): you can dasyshane this node, the input msg is just send to the next node.
 
 
 #### Inportend Note
-This set of nodes is using the work of kelly's I2C package to work. And i like to thank hem for the work he did on that package. 
+Version v0.5.0 is now using the I2C-bus package from fivdi. It looks more robust and better for asyncrone processes like node-red. I would like the maker as much thanks for his work as Kelly in the past version. You can vind his work on github: https://github.com/fivdi/i2c-bus
+
+old version did use the work of kelly's I2C package to work. And i like to thank hem for the work he did on that package. 
 For more info check out his github account at: https://github.com/kelly/node-i2c
