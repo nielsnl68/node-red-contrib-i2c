@@ -17,7 +17,7 @@
 <script type="text/x-red" data-template-name="i2c scan">
     <div class="form-row">
         <label for="node-input-i2cdevice"><i class="fa fa-globe"></i> I2C device</label>
-        <input type="text" id="node-input-i2cdevice">
+        <input type="text" id="node-input-i2cdevice" >
     </div>
 
     <div class="form-row">
@@ -34,7 +34,7 @@
 
 <script type="text/javascript">
     RED.nodes.registerType('i2c scan',{
-        category: 'input',
+        category: 'i2c bus',
         defaults: {
 		    i2cdevice: {type:"i2c-device", required:true},
             name: {name:""}
@@ -60,33 +60,31 @@
         <input type="text" id="node-input-i2cdevice">
     </div>
     <div class="form-row">
-        <label for="node-input-address"><i class="fa fa-random"></i> address</label>
-        <input type="number" id="node-input-address" class="I2C-in-address" placeholder="[msg.address]">
+        <label for="node-input-address"><i class="fa fa-dot-circle-o"></i> Address</label>
+        <input type="number" id="node-input-address" class="I2C-in-address" placeholder="[msg.address]" min=3 max=127>
+    </div>
+    <div class="form-row">
+        <label for="node-input-command"><i class="fa fa-empire"></i> Command</label>
+        <input type="number" id="node-input-command" class="I2C-in-command" placeholder="[msg.command]" min=0 max=255>
     </div>
    <div class="form-row">
-        <label for="node-input-command"><i class="fa fa-random"></i> Command</label>
-        <input type="number" id="node-input-command" class="I2C-in-command" placeholder="[msg.command]">
-    </div>
-   <div class="form-row">
-        <label for="node-input-count"><i class="fa fa-random"></i> Returning Length</label>
+        <label for="node-input-count" alt="How many bytes will be returned"><i class="fa fa-sign-in"></i> Bytes</label>
         <input type="number" id="node-input-count" class="I2C-in-count"  placeholder="1">
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-tips">The address to join must start with a # (as per normal i2c rules...)<br/>
-    You may join multiple addresss by comma separating a list - #chan1,#chan2,etc.</div>
-</script>
+  </script>
 
 <script type="text/x-red" data-help-name="i2c in">
     <p>Reads data from a local I2C port.</p>
-    <p>It will put a byte array into the msg.payload.</p>
+    <p>It will put a buffer object into the msg.payload.</p>
 </script>
 
 <script type="text/javascript">
     RED.nodes.registerType('i2c in',{
-        category: 'input',
+        category: 'i2c bus',
         defaults: {
             name: {value:""},
             i2cdevice: {type:"i2c-device", required:true},
@@ -104,23 +102,22 @@
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
-        }
+        },
+		oneditprepare: function() {
+			$(".I2C-in-address").spinner({
+				min:3,
+				max:127
+			});
+			$(".I2C-in-command").spinner({
+				min:0,
+				max:255
+			});
+			$(".I2C-in-count").spinner({
+				min:0,
+				max:31
+			});
+		}
     });
-        $(".I2C-in-address").spinner({
-            //max:60,
-            min:1,
-			max:127
-        });
-        $(".I2C-in-command").spinner({
-            //max:60,
-            min:0,
-			max:255
-        });
-        $(".I2C-in-count").spinner({
-            //max:60,
-            min:0,
-			max:31
-        });
 </script>
 
 
@@ -130,20 +127,22 @@
         <input type="text" id="node-input-i2cdevice">
     </div>
     <div class="form-row">
-        <label for="node-input-address"><i class="fa fa-random"></i> Address</label>
-        <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" min=0 max=127>
+        <label for="node-input-address"><i class="fa fa-dot-circle-o"></i> Address</label>
+        <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" min=3 max=127>
     </div>
     <div class="form-row">
-        <label for="node-input-command"><i class="fa fa-random"></i> Command</label>
+        <label for="node-input-command"><i class="fa fa-empire"></i> Command</label>
         <input type="number" id="node-input-command" class="I2C-out-command" placeholder="[msg.command]" min=0 max=255>
     </div>
 
     <div class="form-row">
-        <label for="node-input-payload"><i class="fa fa-random"></i> Payload</label>
-        <input type="sring" id="node-input-payload" class="I2C-out-command" placeholder="[msg.payload]">
+        <label for="node-input-payload"><i class="fa fa-envelope"></i> Payload</span></label>
+        <input type="text" id="node-input-payload" style="width:70%">
+        <input type="hidden" id="node-input-payloadType">
     </div>
+	
    <div class="form-row">
-        <label for="node-input-count"><i class="fa fa-random"></i> Send bytes</label>
+        <label for="node-input-count" alt="Send number of bytes"><i class="fa fa-sign-out"></i> Send bytes</label>
         <input type="number" id="node-input-count" class="I2C-out-count"  placeholder="1">
     </div>
 
@@ -151,10 +150,8 @@
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-tips">The address to join must start with a # (as per normal i2c rules...)<br/>
-    Sending the complete object will stringify the whole msg object before sending.</div>
 </script>
-
+ 
 <script type="text/x-red" data-help-name="i2c out">
    <p>Provides a connection to an outbound I2C address.</p>
     <p>Only the <b>msg.payload</b> is sent.</p>
@@ -165,14 +162,15 @@
 
 <script type="text/javascript">
     RED.nodes.registerType('i2c out',{
-        category: 'output',
+        category: 'i2c bus',
         defaults: {
             name: {value:""},
             i2cdevice: {type:"i2c-device", required:true},
             address: {value:"",required:false},
             command: {value:"", required:false},
-            payload: {value:"", required:false},
-            count: {value:"1", required:true}
+            payload: {value:"payload", required:false, validate: RED.validators.typedInput("payloadType")},
+			      payloadType: {value:"msg"},
+            count:   {value:"1", required:false}
         },
         color:"red",
         inputs:1,
@@ -185,34 +183,57 @@
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
-        }
-    });
+        },
+		oneditprepare: function() {
+            if (this.payloadType == null) {
+                this.payloadType = "msg";
+            } else if (this.payloadType === 'string' ) {
+                this.payloadType = "str";
+			} 
+            $("#node-input-payload").typedInput({
+                default: 'msg',
+                typeField: $("#node-input-payloadType"),
+                types:['msg','flow','global','str','num','bool','json','bin']
+			});
+			$("#node-input-payload").typedInput('type',this.payloadType);
+            $("#node-input-payloadType").val(this.payloadType);
+			if ($("#node-input-payload").typedInput('type') === 'msg' &&
+				$("#node-input-payload").typedInput('value') === ''
+			) {
+				$("#node-input-payload").typedInput('value','payload');
+			}
+			
+			
+            $("#node-input-payload").on('change',function() {
+                if ($("#node-input-payload").typedInput('type') === 'msg' &&
+                    $("#node-input-payload").typedInput('value') === ''
+                ) {
+                    $("#node-input-payload").typedInput('value','payload');
+                }
+            });
+	    
 	        $(".I2C-out-address").spinner({
-            //max:60,
-            min:0,
-			max:255
-        });
-       $(".I2C-out-command").spinner({
-            //max:60,
-            min:0,
-			max:255
-        });
-       $(".I2C-out-count").spinner({
-            //max:60,
-            min:0,
-			max:6
-        });
+				min:0,
+				max:0x77
+			});
+			$(".I2C-out--command").spinner({
+				min:0,
+				max:255
+			});
+			$(".I2C-out-count").spinner({
+				min:0,
+				max:31
+			});
+			
+		}
+    });
 </script>
 
 
 <script type="text/x-red" data-template-name="i2c-device">
     <div class="form-row">
         <label for="node-config-input-device"><i class="fa fa-globe"></i> I2C Device</label>
-        <input type="text" id="node-config-input-device" placeholder="/dev/I2C-1" style="width: 45%;" >
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-address"><i class="fa fa-user"></i> Default Address</label>
-        <input type="text" id="node-config-input-address" placeholder="24">
+        <input type="text" id="node-config-input-device" placeholder="/dev/I2C-1" style="width: 45%;" readonly>
     </div>
 </script>
 
@@ -220,17 +241,10 @@
     RED.nodes.registerType('i2c-device',{
         category: 'config',
         defaults: {
-            device: {value:"",required:true},
-            address: {value:"24",required:true}
+            device: {value:"/dev/I2C-1", required:true}
         },
         label: function() {
             return this.device;
         }
     });
-    $("#node-config-input-address").spinner({
-            //max:60,
-            min:0,
-			max:255
-        });
-
 </script>
