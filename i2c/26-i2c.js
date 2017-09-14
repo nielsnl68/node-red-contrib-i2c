@@ -26,7 +26,7 @@ module.exports = function(RED) {
         this.serverConfig = RED.nodes.getNode(this.i2cdevice);
         var node = this;
         if (node.serverConfig.port === null) {
-            node.log("CONNECT: " + node.serverConfig.device);
+           // node.log("CONNECT: " + node.serverConfig.device);
             node.serverConfig.port = I2C.openSync( 1 );
       			var globalContext = this.context().global;
       			globalContext.set("i2cport", node.serverConfig.port); 
@@ -70,7 +70,7 @@ module.exports = function(RED) {
         this.count = n.count;
         var node = this;
         if (node.serverConfig.port === null) {
-            node.log("CONNECT: " + node.serverConfig.device);
+           // node.log("CONNECT: " + node.serverConfig.device);
             node.serverConfig.port = I2C.openSync( 1 );
 		      	var globalContext = this.context().global;
 			      globalContext.set("i2cport", node.serverConfig.port); 			
@@ -138,7 +138,7 @@ module.exports = function(RED) {
         var node = this;
  
         if (node.serverConfig.port === null) {
-            node.log("CONNECT: " + node.serverConfig.device);
+            //node.log("CONNECT: " + node.serverConfig.device);
             node.serverConfig.port = I2C.openSync( 1 );
 			var globalContext = this.context().global;
 			globalContext.set("i2cport", node.serverConfig.port); 			
