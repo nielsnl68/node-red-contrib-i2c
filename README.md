@@ -1,7 +1,13 @@
 # node-red-contrib-i2c
 This set of node-red nodes communicate with the Raspberry Pi I2C driver and uses the node-I2C package.
 Run the following command in the root directory of your Node-RED install, usually
-this is ~/.node-red .
+this is ~/.node-red.
+
+As of version 0.5.0 the nodes are using the i2c-bus library to communicate with your devices. It looks more stable and up-to-date. Also the need to use a config-node is removed. The config node was needed to store the common i2c object. With the new i2c-bus library is that not needed anymore.
+
+Warning: After upgrading to this version you will get an error of an unknown node in the config side-bar, you can safely remove this one.
+
+Downside my nodes work only for newer version where the i2c driver is on /dev/i2c-1
 
     npm install --unsafe-perm node-red-contrib-i2c
 
