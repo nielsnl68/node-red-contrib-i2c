@@ -5,7 +5,7 @@ this is ~/.node-red.
 
 As of version 0.5.0 the nodes are using the i2c-bus library to communicate with your devices. It looks more stable and up-to-date. Also the need to use a config-node is removed. The config node was needed to store the common i2c object. With the new i2c-bus library is that not needed anymore.
 
-Warning: After upgrading to this version you will get an error of an unknown node in the config side-bar, you can safely remove this one.
+**Warning**: After upgrading to this version you will get an error of an unknown node in the config side-bar, you can safely remove this one.
 
 Downside my nodes work only for newer version where the i2c driver is on /dev/i2c-1
 
@@ -32,7 +32,7 @@ This node will request data from a given device. The address and command can bot
 This node will send a given String/array/buffer to a given device. The address and command can both be set in the dialog screen or dynamicly with <b>msg.address</b> and <b>msg.command</b>. 
 The payload can be staticly or dynamicly (using msg.payload) set. This payload can be a Buffer, Array, String or Integer. When you use integers then the number of bytes to send is importend and can be set between 0 and 31 bytes. 
 
-NEW(0.5.0): you can dasyshane this node, the input msg is just send to the next node.
+NEW(0.5.0): you can daisychain this node, the input msg is send unchanged to the next node.
 
 
 #### Inportend Note
