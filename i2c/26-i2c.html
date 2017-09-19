@@ -45,7 +45,7 @@
 
 <script type="text/x-red" data-template-name="i2c in">
     <div class="form-row">
-        <label for="node-input-address"><i class="fa fa-dot-circle-o"></i> Address</label>
+        <label for="node-input-address"><i class="fa fa-address-card-o"></i> Bus Address</label>
         <input type="number" id="node-input-address" class="I2C-in-address" placeholder="[msg.address]" min=3 max=127>
     </div>
     <div class="form-row">
@@ -54,7 +54,7 @@
     </div>
    <div class="form-row">
         <label for="node-input-count" alt="How many bytes will be returned"><i class="fa fa-sign-in"></i> Bytes</label>
-        <input type="number" id="node-input-count" class="I2C-in-count"  placeholder="1">
+        <input type="number" id="node-input-count" class="I2C-in-count"  placeholder="1" min=0 max=31>
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -82,27 +82,15 @@
         icon: "serial.png",
         label: function() {      return this.name||"I2C in"; },
         labelStyle: function() { return this.name?"node_label_italic":""; },
-		    oneditprepare: function() {
-    			$(".I2C-in-address").spinner({
-    				min:3,
-    				max:127
-    			});
-    			$(".I2C-in-command").spinner({
-    				min:0,
-    				max:255
-    			});
-    			$(".I2C-in-count").spinner({
-    				min:0,
-    				max:31
-    			});
-    		}
+	oneditprepare: function() {
+    	}
     });
 </script>
 
 
 <script type="text/x-red" data-template-name="i2c out">
     <div class="form-row">
-        <label for="node-input-address"><i class="fa fa-dot-circle-o"></i> Address</label>
+        <label for="node-input-address"><i class="fa fa-address-card-o"></i> Bus Address</label>
         <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" min=3 max=127>
     </div>
     <div class="form-row">
@@ -118,7 +106,7 @@
 	
    <div class="form-row">
         <label for="node-input-count" alt="Send number of bytes"><i class="fa fa-sign-out"></i> Send bytes</label>
-        <input type="number" id="node-input-count" class="I2C-out-count"  placeholder="1">
+        <input type="number" id="node-input-count" class="I2C-out-count"  placeholder="1" min=0 max=31>
     </div>
 
     <div class="form-row">
@@ -180,19 +168,6 @@
                     $("#node-input-payload").typedInput('value','payload');
                 }
             });
-	    
-  	        $(".I2C-out-address").spinner({
-				      min:0,
-				      max:0x77
-			      });
-      			$(".I2C-out--command").spinner({
-      				min:0,
-      				max:255
-      			});
-      			$(".I2C-out-count").spinner({
-      				min:0,
-      				max:31
-      			});
-      	}
+	 }
     });
 </script>
