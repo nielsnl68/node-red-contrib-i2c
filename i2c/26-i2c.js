@@ -12,7 +12,8 @@ module.exports = function(RED) {
             node.port.scan(function(err, res) {
                 // result contains a buffer of bytes
                 if (err) {
-                    node.error(errI);
+                    node.error(err, msg);
+		    return [null,null];
                 } else {
                     
                     node.send([{
@@ -60,13 +61,14 @@ module.exports = function(RED) {
       			  this.status({fill:"red",shape:"ring",text:"Read bytes value is missing or incorrect"});	
       			  return;
       			} else {
-      				this.status({});
+      			  this.status({});
       			}
       
       			var buffer = new Buffer(buffcount);	
             node.port.readI2cBlock(address, command, buffcount, buffer, function(err, size, res) {
                 if (err) {
-                    node.error(err);
+                    node.error(err, msg);
+		    return null;
                 } else {
                     var payload;
                     if (node.count == 1) {
@@ -74,12 +76,12 @@ module.exports = function(RED) {
                     } else {
                         payload = res;
                     }
-          					msg = Object.assign({}, msg);
+          	    msg = Object.assign({}, msg);
                             //  node.log('log returned data'+  JSON.stringify([size, res.length, res, res.toString("utf-8")]));
-          					msg.address = address;
+          	    msg.address = address;
                     msg.command = command;
                     msg.payload = payload;
-          					msg.size    = size;					
+          	    msg.size    = size;					
                     node.send(msg);
                 }
             });
@@ -135,36 +137,39 @@ module.exports = function(RED) {
                     myPayload = RED.util.evaluateNodeProperty(this.payload, this.payloadType, this,msg);
                 }			
 				
-        				if (myPayload == null || node.count == 0) {
-        					node.port.sendByte(address, command,  function(err) {
-        						if (err) { node.error(err, msg);
+        	if (myPayload == null || node.count == 0) {
+        	  node.port.sendByte(address, command,  function(err) {
+        	  if (err) { 
+		    node.error(err, msg);
+	            return null;
                     } else {
                       node.send(msg);
                     };
-        					});
-        				} else if (!isNaN(myPayload)) {
-        					var data = myPayload;
-        					myPayload = Buffer.allocUnsafe(node.count);
-        					myPayload.writeIntLE(data, 0, node.count, true);
+        	  });
+        	} else 
+		if (!isNaN(myPayload)) {
+        	  var data = myPayload;
+        	  myPayload = Buffer.allocUnsafe(node.count);
+        	  myPayload.writeIntLE(data, 0, node.count, true);
         					
-        				} else if (typeof myPayload === "string" || Array.isArray(myPayload)) {
-        					myPayload = Buffer.from(myPayload);
-        				}
-        				if (myPayload.length > 32) {
-        					node.error("Too many bytes to write to I2C");
-        				} else {
-        				//	node.log('log write data'+  JSON.stringify([address, command, myPayload.length, myPayload, myPayload.toString("utf-8")]));
+        	} else if (typeof myPayload === "string" || Array.isArray(myPayload)) {
+        	  myPayload = Buffer.from(myPayload);
+        	}
+        	if (myPayload.length > 32) {
+        	  node.error("Too many bytes to write to I2C", msg);
+		  return null;
+        	} else {
+        	  //	node.log('log write data'+  JSON.stringify([address, command, myPayload.length, myPayload, myPayload.toString("utf-8")]));
         
-        					node.port.writeI2cBlock(address, command, myPayload.length, myPayload, function(err) {
-        						if (err) { 
-                      node.error(err, msg);
+        	  node.port.writeI2cBlock(address, command, myPayload.length, myPayload, function(err) {
+        	    if (err) { 
+                      node.error(err);
+		      return null;
                     } else {
                       node.send(msg);
                     };
-        
-        					});
-        				}
-			
+		  });
+        	}
             } catch(err) {
                 this.error(err,msg);
             }			
