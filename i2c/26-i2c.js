@@ -12,7 +12,7 @@ module.exports = function(RED) {
             node.port.scan(function(err, res) {
                 // result contains a buffer of bytes
                 if (err) {
-                    node.error(errI);
+                    node.error(err);
                 } else {
                     
                     node.send([{
@@ -45,71 +45,72 @@ module.exports = function(RED) {
 
         node.port = I2C.openSync( 1 );
         node.on("input", function(msg) {
-            var address = node.address || msg.address ;
-            var command = node.command || msg.command ;
-      			address = parseInt(address);
-      			command = parseInt(command);
-      			var buffcount = parseInt(node.count);
-      			if (isNaN(address)) {
-      			  this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});	
-      			  return;
-      			} else if ((!buffcount) || isNaN(buffcount) ) {
-      			  this.status({fill:"red",shape:"ring",text:"Read bytes value is missing or incorrect"});	
-      			  return;
-      			} else {
-      				this.status({});
-      			}
-      
-      			var buffer = new Buffer(buffcount);	
+		var address = node.address || msg.address ;
+		var command = node.command || msg.command ;
+		address = parseInt(address);
+		command = parseInt(command);
+		var buffcount = parseInt(node.count);
+		if (isNaN(address)) {
+			this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});	
+		  	return;
+		} else if ((!buffcount) || isNaN(buffcount) ) {
+		  	this.status({fill:"red",shape:"ring",text:"Read bytes value is missing or incorrect"});	
+		  	return;
+		} else {
+			this.status({});
+		}
+
+		var buffer = new Buffer(buffcount);	
 		if(isNaN(command)) {
 			node.port.i2cRead(address, buffcount, buffer, function(err, size, res) { 
-		/* Bloc for read without command like pcf8574A and pcf8574 */
-                if (err) {
-                    node.error(err);
-                } else {
-                    var payload;
-                    if (node.count == 1) {
-                        payload = res[0];
-                    } else {
-                        payload = res;
-                    }
-          	    msg = Object.assign({}, msg);
-                    //  node.log('log returned data'+  JSON.stringify([size, res.length, res, res.toString("utf-8")]));
-               	    msg.address = address;
-                    msg.command = command;
-                    msg.payload = payload;
-          					msg.size    = size;					
-                    node.send(msg);
-                }
+				/* Bloc for read without command like pcf8574A and pcf8574 */
+				if (err) {
+				    node.error(err, msg);
+				} else {
+				    var payload;
+				    if (node.count == 1) {
+					payload = res[0];
+				    } else {
+					payload = res;
+				    }
+				    msg = Object.assign({}, msg);
+				    //  node.log('log returned data'+  JSON.stringify([size, res.length, res, res.toString("utf-8")]));
+				    msg.address = address;
+				    msg.command = command;
+				    msg.payload = payload;
+				    msg.size    = size;					
+				    node.send(msg);
+				}
 			});
 		} else {
             		node.port.readI2cBlock(address, command, buffcount, buffer, function(err, size, res) {
-		/* Block for read with command */
-                if (err) {
-                    node.error(err);
-                } else {
-                    var payload;
-                    if (node.count == 1) {
-                        payload = res[0];
-                    } else {
-                        payload = res;
-                    }
-          	    msg = Object.assign({}, msg);
-                    //  node.log('log returned data'+  JSON.stringify([size, res.length, res, res.toString("utf-8")]));
-               	    msg.address = address;
-                    msg.command = command;
-                    msg.payload = payload;
-          	    msg.size    = size;					
-                    node.send(msg);
-                }
-            });
-        };
+				/* Block for read with command */
+				if (err) {
+				    node.error(err);
+				} else {
+				    var payload;
+				    if (node.count == 1) {
+					payload = res[0];
+				    } else {
+					payload = res;
+				    }
+				    msg = Object.assign({}, msg);
+				    //  node.log('log returned data'+  JSON.stringify([size, res.length, res, res.toString("utf-8")]));
+				    msg.address = address;
+				    msg.command = command;
+				    msg.payload = payload;
+				    msg.size    = size;					
+				    node.send(msg);
+				}
+			});
+		}
+	};
 
-        node.on("close", function() {
-            node.port.closeSync();
-        });
-    });
+	node.on("close", function() {
+	    node.port.closeSync();
+	});
     }
+	
     RED.nodes.registerType("i2c in", I2CInNode);
 
 
