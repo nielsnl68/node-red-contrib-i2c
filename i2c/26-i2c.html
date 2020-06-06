@@ -8,8 +8,9 @@
 </script>
 
 <script type="text/html" data-help-name="i2c scan">
-    <p>Reads data from a local I2C port.</p>
-    <p>Shows a list of connected I2C devices.</p>
+    <p>Scans local host for i2c devices.</p>
+    <p>The first output contains an array of any addresses found.</p>
+    <p>The second output sends each address as a separate message.</p>
 </script>
 
 <script type="text/javascript">
@@ -22,7 +23,7 @@
         inputs:1,
         outputs:2,
         icon: "serial.png",
-        label: function() { return this.name||'I2C Scan'; },
+        label: function() { return this.name||'i2c Scan'; },
         labelStyle: function() { return this.name?"node_label_italic":""; }
     });
 </script>
@@ -39,7 +40,7 @@
     </div>
    <div class="form-row">
         <label for="node-input-count" alt="How many bytes will be returned"><i class="fa fa-sign-in"></i> Bytes</label>
-        <input type="number" id="node-input-count" class="I2C-in-count"  placeholder="1" min=0 max=31>
+        <input type="number" id="node-input-count" class="I2C-in-count" placeholder="1" min=0 max=31>
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -49,7 +50,7 @@
 
 <script type="text/html" data-help-name="i2c in">
     <p>Reads data from a local I2C port.</p>
-    <p>It will put a buffer object into the msg.payload.</p>
+    <p>It will put a buffer object into the <code>msg.payload</code>.</p>
 </script>
 
 <script type="text/javascript">
@@ -59,16 +60,14 @@
             name: {value:""},
             address: {value:"",required:false},
             command: {value:"",required:false},
-            count:   {value:"1",required:true}
+            count: {value:"1",required:true}
         },
-        color:"#E35253",  
+        color:"#E35253",
         inputs:1,
         outputs:1,
         icon: "serial.png",
-        label: function() {      return this.name||"I2C in"; },
-        labelStyle: function() { return this.name?"node_label_italic":""; },
-	oneditprepare: function() {
-    	}
+        label: function() { return this.name||"i2c in"; },
+        labelStyle: function() { return this.name?"node_label_italic":""; }
     });
 </script>
 
@@ -89,7 +88,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-count" alt="Send number of bytes"><i class="fa fa-sign-out"></i> Send bytes</label>
-        <input type="number" id="node-input-count" class="I2C-out-count"  placeholder="1" min=0 max=31>
+        <input type="number" id="node-input-count" class="I2C-out-count" placeholder="1" min=0 max=31>
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -99,10 +98,10 @@
  
 <script type="text/html" data-help-name="i2c out">
     <p>Provides a connection to an outbound I2C address.</p>
-    <p>Only the <b>msg.payload</b> is sent.</p>
-	<p>address <b>0</b> means that you will broadcast to all I2C-units on the I2C bus.</p>
-	<p>the <b>Send bytes</b> is used to set the number bytes that will be used when the payload is a number</P>
-    <p>The <b>payload</b> and <b>msg.payload</b> can be a Buffer, Array, String or Integer</p>	
+    <p>Only the <code>msg.payload</code> is sent.</p>
+    <p>address <b>0</b> means that you will broadcast to all I2C-units on the I2C bus.</p>
+    <p>The <b>Send bytes</b> is used to set the number of bytes that will be used when the payload is a number.</p>
+    <p>The <b>payload</b> and <b>msg.payload</b> can be a Buffer, Array, String or Integer.</p>	
 </script>
 
 <script type="text/javascript">
@@ -113,7 +112,7 @@
             address: {value:"",required:false},
             command: {value:"", required:false},
             payload: {value:"payload", required:false, validate: RED.validators.typedInput("payloadType")},
-			payloadType: {value:"msg"},
+            payloadType: {value:"msg"},
             count: {value:"1", required:false}
         },
         color:"#E35253",
@@ -121,27 +120,27 @@
         outputs:1,
         icon: "serial.png",
         align: "right",
-        label: function() {      return this.name||'I2C out'; },
+        label: function() { return this.name||'i2c out'; },
         labelStyle: function() { return this.name?"node_label_italic":"";},
-		    oneditprepare: function() {
+        oneditprepare: function() {
             if (this.payloadType == null) {
                 this.payloadType = "msg";
             } else if (this.payloadType === 'string' ) {
                 this.payloadType = "str";
-			} 
+            } 
 
             $("#node-input-payload").typedInput({
                 default: 'msg',
                 typeField: $("#node-input-payloadType"),
                 types:['msg','flow','global','str','num','bool','json','bin']
-			      });
-      			$("#node-input-payload").typedInput('type',this.payloadType);
-                    $("#node-input-payloadType").val(this.payloadType);
-      			if ($("#node-input-payload").typedInput('type') === 'msg' &&
-      				$("#node-input-payload").typedInput('value') === ''
-      			) {
-      				$("#node-input-payload").typedInput('value','payload');
-      			}
+            });
+            $("#node-input-payload").typedInput('type',this.payloadType);
+            $("#node-input-payloadType").val(this.payloadType);
+            if ($("#node-input-payload").typedInput('type') === 'msg' &&
+                $("#node-input-payload").typedInput('value') === ''
+            ) {
+                $("#node-input-payload").typedInput('value','payload');
+            }
 			
             $("#node-input-payload").on('change',function() {
                 if ($("#node-input-payload").typedInput('type') === 'msg' &&
@@ -150,6 +149,6 @@
                     $("#node-input-payload").typedInput('value','payload');
                 }
             });
-	    }
+        }
     });
 </script>

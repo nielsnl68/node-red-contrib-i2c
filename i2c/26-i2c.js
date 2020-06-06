@@ -2,7 +2,7 @@ module.exports = function(RED) {
     "use strict";
     var I2C = require("i2c-bus");
 
-    // The Output Node
+    // The Scan Node
     function I2CScanNode(n) {
         RED.nodes.createNode(this, n);
         var node = this;
@@ -13,28 +13,22 @@ module.exports = function(RED) {
                 // result contains a buffer of bytes
                 if (err) {
                     node.error(err);
-                } else {  
-                    node.send([{
-                        payload: res
-                    }, null]);
+                } else {
+                    node.send([{ payload:res }, null]);
                     res.forEach(function(entry) {
-                        node.send([null, {
-                            payload: entry,
-                            address: entry
-                        }]);
+                        node.send([null, { payload:entry, address:entry }]);
                     });
-
                 }
             });
         });
- 
+
         node.on("close", function() {
             node.port.closeSync();
         });
     }
-    RED.nodes.registerType("i2c scan", I2CScanNode);	
-    
-    
+    RED.nodes.registerType("i2c scan", I2CScanNode);
+
+
     // The Input Node
     function I2CInNode(n) {
         RED.nodes.createNode(this, n);
@@ -51,18 +45,18 @@ module.exports = function(RED) {
             command = parseInt(command);
             var buffcount = parseInt(node.count);
             if (isNaN(address)) {
-                this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});	
+                this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});
                 return;
             } else if ((!buffcount) || isNaN(buffcount) ) {
-                this.status({fill:"red",shape:"ring",text:"Read bytes value is missing or incorrect"});	
+                this.status({fill:"red",shape:"ring",text:"Read bytes value is missing or incorrect"});
                 return;
             } else {
                 this.status({});
             }
-            var buffer = new Buffer(buffcount);	
+            var buffer = new Buffer(buffcount);
             if(isNaN(command)) {
-                node.port.i2cRead(address, buffcount, buffer, function(err, size, res) { 
-                    /* Bloc for read without command like pcf8574A and pcf8574 */
+                node.port.i2cRead(address, buffcount, buffer, function(err, size, res) {
+                    /* Block for read without command like pcf8574A and pcf8574 */
                     if (err) {
                         node.error(err, msg);
                     } else {
@@ -73,11 +67,11 @@ module.exports = function(RED) {
                             payload = res;
                         }
                         msg = Object.assign({}, msg);
-                        // node.log('log returned data'+  JSON.stringify([size, res.length, res, res.toString("utf-8")]));
+                        // node.log('log returned data'+JSON.stringify([size, res.length, res, res.toString("utf-8")]));
                         msg.address = address;
                         msg.command = command;
                         msg.payload = payload;
-                        msg.size    = size;					
+                        msg.size = size;
                         node.send(msg);
                     }
                 });
@@ -98,7 +92,7 @@ module.exports = function(RED) {
                         msg.address = address;
                         msg.command = command;
                         msg.payload = payload;
-                        msg.size    = size;					
+                        msg.size = size;
                         node.send(msg);
                     }
                 });
@@ -133,13 +127,13 @@ module.exports = function(RED) {
             command = parseInt(command);
             var buffcount = parseInt(node.count);
             if (isNaN(address)) {
-                this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});	
+                this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});
                 return;
             } else if (isNaN(command) ) {
-                this.status({fill:"red",shape:"ring",text:"Command  ("+command+") value is missing or incorrect"});	
+                this.status({fill:"red",shape:"ring",text:"Command  ("+command+") value is missing or incorrect"});
                 return;
             } else if (isNaN(buffcount) ) {
-                this.status({fill:"red",shape:"ring",text:"Send bytes value is missing or incorrect"});	
+                this.status({fill:"red",shape:"ring",text:"Send bytes value is missing or incorrect"});
                 return;
             } else {
                 this.status({});
@@ -151,7 +145,7 @@ module.exports = function(RED) {
                     myPayload = null;
                 } else {
                     myPayload = RED.util.evaluateNodeProperty(this.payload, this.payloadType, this,msg);
-                }			
+                }
                 if (myPayload == null || node.count == 0) {
                     node.port.sendByte(address, command,  function(err) {
                         if (err) { node.error(err, msg);
@@ -171,7 +165,7 @@ module.exports = function(RED) {
                 } else {
                     // node.log('log write data'+  JSON.stringify([address, command, myPayload.length, myPayload, myPayload.toString("utf-8")]));
                     node.port.writeI2cBlock(address, command, myPayload.length, myPayload, function(err) {
-                        if (err) { 
+                        if (err) {
                             node.error(err, msg);
                         } else {
                             node.send(msg);
@@ -180,7 +174,7 @@ module.exports = function(RED) {
                 }
             } catch(err) {
                 this.error(err,msg);
-            }			
+            }
         });
 
         node.on("close", function() {
