@@ -4,7 +4,8 @@ This set of node-red nodes communicate with the Raspberry Pi I2C driver and uses
 Run the following command in the root directory of your Node-RED install, usually
 this is ~/.node-red.
 
-This node only works for newer version of Pi where the i2c driver is on /dev/i2c-1, or /dev/i2c-0 for a Pi rev 1.
+This node now allows you configure the bus number of the i2c driver.
+For most Pi this is 1 for /dev/i2c-1, or 0 for /dev/i2c-0 for a older rev 1 Pi.
 
 ## Install
 

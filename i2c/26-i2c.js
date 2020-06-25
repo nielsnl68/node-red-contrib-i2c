@@ -5,9 +5,10 @@ module.exports = function(RED) {
     // The Scan Node
     function I2CScanNode(n) {
         RED.nodes.createNode(this, n);
+        this.busno = parseInt(n.busno || 1);
         var node = this;
 
-        node.port  = I2C.openSync( 1 );
+        node.port  = I2C.openSync( node.busno );
         node.on("input", function(msg) {
             node.port.scan(function(err, res) {
                 // result contains a buffer of bytes
@@ -32,12 +33,13 @@ module.exports = function(RED) {
     // The Input Node
     function I2CInNode(n) {
         RED.nodes.createNode(this, n);
+        this.busno = n.busno || 1;
         this.address = n.address;
         this.command = n.command;
         this.count = n.count;
         var node = this;
 
-        node.port = I2C.openSync( 1 );
+        node.port = I2C.openSync( node.busno );
         node.on("input", function(msg) {
             var address = node.address || msg.address ;
             var command = node.command || msg.command ;
@@ -109,6 +111,7 @@ module.exports = function(RED) {
     // The Output Node
     function I2COutNode(n) {
         RED.nodes.createNode(this, n);
+        this.busno = n.busno || 1;
         this.address = parseInt(n.address);
         this.command = parseInt(n.command);
         this.count = parseInt(n.count);
@@ -116,7 +119,7 @@ module.exports = function(RED) {
         this.payloadType = n.payloadType;
         var node = this;
  
-        node.port = I2C.openSync( 1 );
+        node.port = I2C.openSync( node.busno );
         node.on("input", function(msg) {
             var myPayload;
             var address = node.address; 
