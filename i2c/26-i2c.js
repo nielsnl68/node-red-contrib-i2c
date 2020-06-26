@@ -111,7 +111,7 @@ module.exports = function(RED) {
     // The Output Node
     function I2COutNode(n) {
         RED.nodes.createNode(this, n);
-        this.busno = n.busno || 1;
+        this.busno = parseInt(n.busno) || 1;
         this.address = parseInt(n.address);
         this.command = parseInt(n.command);
         this.count = parseInt(n.count);
