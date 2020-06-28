@@ -5,7 +5,7 @@ module.exports = function(RED) {
     // The Scan Node
     function I2CScanNode(n) {
         RED.nodes.createNode(this, n);
-        this.busno = parseInt(n.busno || 1);
+        this.busno = parseInt(n.busno) || 1;
         var node = this;
 
         node.port  = I2C.openSync( node.busno );
@@ -33,7 +33,7 @@ module.exports = function(RED) {
     // The Input Node
     function I2CInNode(n) {
         RED.nodes.createNode(this, n);
-        this.busno = n.busno || 1;
+        this.busno = parseInt(n.busno) || 1;
         this.address = n.address;
         this.command = n.command;
         this.count = n.count;
