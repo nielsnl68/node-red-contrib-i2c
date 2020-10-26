@@ -156,7 +156,7 @@ module.exports = function(RED) {
                             node.send(msg);
                         }
                     });
-                } else if (!isNaN(myPayload)) {
+                } else if (!isNaN(myPayload) && !(typeof myPayload === 'string')) {
                     var data = myPayload;
                     myPayload = Buffer.allocUnsafe(node.count);
                     myPayload.writeIntLE(data, 0, node.count, true);
