@@ -5,7 +5,7 @@ module.exports = function(RED) {
     // The Scan Node
     function I2CScanNode(n) {
         RED.nodes.createNode(this, n);
-        this.busno = isNaN(parseInt(n.busno) ? 1 : parseInt(n.busno));
+        this.busno = isNaN(parseInt(n.busno)) ? 1 : parseInt(n.busno);
         var node = this;
 
         node.port  = I2C.openSync( node.busno );
@@ -33,7 +33,7 @@ module.exports = function(RED) {
     // The Input Node
     function I2CInNode(n) {
         RED.nodes.createNode(this, n);
-        this.busno = isNaN(parseInt(n.busno) ? 1 : parseInt(n.busno));
+        this.busno = isNaN(parseInt(n.busno)) ? 1 : parseInt(n.busno);
         this.address = n.address;
         this.command = n.command;
         this.count = n.count;
@@ -111,7 +111,7 @@ module.exports = function(RED) {
     // The Output Node
     function I2COutNode(n) {
         RED.nodes.createNode(this, n);
-        this.busno = isNaN(parseInt(n.busno) ? 1 : parseInt(n.busno));
+        this.busno = isNaN(parseInt(n.busno)) ? 1 : parseInt(n.busno);
         this.address = parseInt(n.address);
         this.command = parseInt(n.command);
         this.count = parseInt(n.count);
