@@ -58,7 +58,7 @@
     </div>
    <div class="form-row">
         <label for="node-input-count" alt="How many bytes will be returned"><i class="fa fa-sign-in"></i> Bytes</label>
-        <input type="number" id="node-input-count" class="I2C-in-count" placeholder="1" min=0 max=31>
+        <input type="number" id="node-input-count" class="I2C-in-count" placeholder="[msg.bytes]" min=0 max=31>
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -79,7 +79,7 @@
             busno: {value:"1"},
             address: {value:"",required:false},
             command: {value:"",required:false},
-            count: {value:"1",required:true}
+            count: {value:"",required:true}
         },
         color:"#E35253",
         inputs:1,
@@ -120,7 +120,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-count" alt="Send number of bytes"><i class="fa fa-sign-out"></i> Send bytes</label>
-        <input type="number" id="node-input-count" class="I2C-out-count" placeholder="1" min=0 max=31>
+        <input type="number" id="node-input-count" class="I2C-out-count" placeholder="[msg.bytes]" min=0 max=31>
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -146,7 +146,7 @@
             command: {value:"", required:false},
             payload: {value:"payload", required:false, validate: RED.validators.typedInput("payloadType")},
             payloadType: {value:"msg"},
-            count: {value:"1", required:false}
+            count: {value:"", required:false}
         },
         color:"#E35253",
         inputs:1,
