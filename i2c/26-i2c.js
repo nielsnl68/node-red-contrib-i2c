@@ -51,7 +51,7 @@ module.exports = function(RED) {
                 this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});
                 return;
             } else if ((!buffcount) || isNaN(buffcount) ) {
-                this.status({fill:"red",shape:"ring",text:"Read bytes value is missing or incorrect"});
+                this.status({fill:"red",shape:"ring",text:"Read bytes ("+buffcount+") value is missing or incorrect"});
                 return;
             } else {
                 this.status({});
