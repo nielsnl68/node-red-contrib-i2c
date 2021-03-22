@@ -169,14 +169,18 @@ module.exports = function(RED) {
                 if (myPayload.length > 32) {
                     node.error("Too many bytes to write to I2C", msg);
                 } else {
-                    // node.log('log write data'+  JSON.stringify([address, command, myPayload.length, myPayload, myPayload.toString("utf-8")]));
-                    node.port.writeI2cBlock(address, command, myPayload.length, myPayload, function(err) {
-                        if (err) {
-                            node.error(err, msg);
-                        } else {
-                            node.send(msg);
-                        }
-                    });
+                    if (isNaN(command)) {
+                        node.port.i2cWrite(address, myPayload.length, myPayload, function(err) {
+                            if (err) { node.error(err, msg); }
+                            else { node.send(msg); }
+                        });
+                    }
+                    else {
+                        node.port.writeI2cBlock(address, command, myPayload.length, myPayload, function(err) {
+                            if (err) { node.error(err, msg); }
+                            else { node.send(msg); }
+                        });
+                    }
                 }
             } catch(err) {
                 this.error(err,msg);
