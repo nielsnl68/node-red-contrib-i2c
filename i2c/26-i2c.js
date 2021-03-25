@@ -135,9 +135,6 @@ module.exports = function(RED) {
             if (isNaN(address)) {
                 this.status({fill:"red",shape:"ring",text:"Address ("+address+") value is missing or incorrect"});
                 return;
-            } else if (isNaN(command) ) {
-                this.status({fill:"red",shape:"ring",text:"Command ("+command+") value is missing or incorrect"});
-                return;
             } else if (isNaN(buffcount) ) {
                 this.status({fill:"red",shape:"ring",text:"Send bytes ("+buffcount+") value is missing or incorrect"});
                 return;
