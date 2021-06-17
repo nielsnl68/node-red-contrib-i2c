@@ -149,14 +149,14 @@ module.exports = function(RED) {
                 } else {
                     myPayload = RED.util.evaluateNodeProperty(this.payload, this.payloadType, this,msg);
                 }
-                if (myPayload == null || node.count == 0) {
+                if (myPayload == null || (node.count == 0 && !typeof myPayload === 'string')) {
                     node.port.sendByte(address, command,  function(err) {
                         if (err) { node.error(err, msg);
                         } else {
                             node.send(msg);
                         }
                     });
-                } else if (!isNaN(myPayload)) {
+                } else if (!isNaN(myPayload) && !typeof myPayload === 'string') {
                     var data = myPayload;
                     myPayload = Buffer.allocUnsafe(node.count);
                     myPayload.writeIntLE(data, 0, node.count, true);
