@@ -64,7 +64,7 @@ module.exports = function(RED) {
                         node.error(err, msg);
                     } else {
                         var payload;
-                        if (node.count == 1) {
+                        if (buffcount == 1) {
                             payload = res[0];
                         } else {
                             payload = res;
@@ -85,7 +85,7 @@ module.exports = function(RED) {
                         node.error(err, msg);
                     } else {
                         var payload;
-                        if (node.count == 1) {
+                        if (buffcount == 1) {
                             payload = res[0];
                         } else {
                             payload = res;
@@ -149,7 +149,7 @@ module.exports = function(RED) {
                 } else {
                     myPayload = RED.util.evaluateNodeProperty(this.payload, this.payloadType, this, msg);
                 }
-                if (myPayload == null || node.count == 0) {
+                if (myPayload == null || buffcount == 0) {
                     node.port.sendByte(address, command, function(err) {
                         if (err) {
                             node.error(err, msg);
@@ -159,8 +159,8 @@ module.exports = function(RED) {
                     });
                 } else if (Number.isFinite(myPayload)) {
                     var data = myPayload;
-                    myPayload = Buffer.allocUnsafe(node.count);
-                    myPayload.writeIntLE(data, 0, node.count, true);
+                    myPayload = Buffer.allocUnsafe(buffcount);
+                    myPayload.writeIntLE(data, 0, buffcount, true);
                 } else if (typeof myPayload === "string" || Array.isArray(myPayload)) {
                     myPayload = Buffer.from(myPayload);
                 }
