@@ -1,12 +1,20 @@
 module.exports = function(RED) {
     "use strict";
-    var I2C = require("i2c-bus");
+    try {
+        var I2C = require("i2c-bus");   
+    } catch (error) {
+        console.error(error);
+        console.log("Couldn't load i2c-bus, is your platform supported ?");
+        I2C = null;
+    }
 
     // The Scan Node
     function I2CScanNode(n) {
         RED.nodes.createNode(this, n);
         this.busno = isNaN(parseInt(n.busno)) ? 1 : parseInt(n.busno);
         var node = this;
+        
+        if (!I2C) return;
 
         node.port = I2C.openSync(node.busno);
         node.on("input", function(msg) {
@@ -38,6 +46,8 @@ module.exports = function(RED) {
         this.command = n.command;
         this.count = n.count;
         var node = this;
+        
+        if (!I2C) return;
 
         node.port = I2C.openSync(node.busno);
         node.on("input", function(msg) {
@@ -119,6 +129,8 @@ module.exports = function(RED) {
         this.payload = n.payload;
         this.payloadType = n.payloadType;
         var node = this;
+        
+        if (!I2C) return;
 
         node.port = I2C.openSync(node.busno);
         node.on("input", function(msg) {
